@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С 8 марта, мама!</title>
+    <style>
+        /* ===== СБРОС И БАЗОВЫЕ НАСТРОЙКИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* скрываем стандартный курсор */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #2a0000 0%, #4a0000 70%, #6b1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            color: #fff;
+        }
+
+        /* ===== АНИМИРОВАННЫЙ КУРСОР ===== */
+        .cursor {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen; /* эффект свечения при наложении */
+            transition: transform 0.1s ease;
+            transform: translate(-50%, -50%);
+            will-change: transform, background;
+            animation: cursorGlow 3s infinite alternate;
+            box-shadow: 0 0 25px currentColor;
+        }
+
+        @keyframes cursorGlow {
+            0% {
+                background: rgba(255, 80, 80, 0.9);
+                box-shadow: 0 0 30px #ff4d4d, 0 0 60px #ff1a1a;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                background: rgba(255, 160, 160, 0.9);
+                box-shadow: 0 0 40px #ffb3b3, 0 0 80px #ff6666;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                background: rgba(200, 60, 60, 0.9);
+                box-shadow: 0 0 30px #ff3333, 0 0 60px #cc0000;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
+        .container {
+            max-width: 900px;
+            margin: 50px 20px;
+            padding: 40px;
+            background: rgba(70, 10, 10, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 60px 20px 60px 20px;
+            border: 2px solid rgba(255, 100, 100, 0.4);
+            box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(255, 200, 200, 0.2);
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s;
+        }
+
+        /* ===== ПАРАЛЛАКС БЛОКИ (ЭФФЕКТ НАВЕДЕНИЯ) ===== */
+        .parallax-block {
+            background: rgba(120, 20, 20, 0.5);
+            padding: 30px 40px;
+            margin: 30px 0;
+            border-radius: 30px;
+            border-left: 8px solid #ff7b7b;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(150, 0, 0, 0.5);
+            transition: all 0.2s ease-out;
+            will-change: transform;
+        }
+
+        /* Эффект "парящего" блока при наведении (будет управляться JS) */
+        .parallax-block:hover {
+            box-shadow: 0 30px 40px rgba(200, 0, 0, 0.6);
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            text-align: center;
+            text-shadow: 0 0 20px #ff5e5e, 2px 4px 10px #4a0000;
+            letter-spacing: 4px;
+            word-break: break-word;
+            background: linear-gradient(45deg, #ffe6e6, #ffb6b6, #ff8a8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.6rem;
+            line-height: 1.8;
+            margin: 20px 0;
+            font-weight: 300;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        h3 {
+            font-size: 2.4rem;
+            color: #ffcfcf;
+            border-bottom: 3px dashed #ff6f6f;
+            display: inline-block;
+            padding-bottom: 8px;
+            margin: 20px 0;
+        }
+
+        button {
+            background: linear-gradient(145deg, #b3002d, #800020);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            padding: 18px 45px;
+            border-radius: 60px;
+            cursor: none; /* подчиняем кастомному курсору */
+            box-shadow: 0 10px 0 #4d0013, 0 10px 30px rgba(255, 0, 0, 0.7);
+            transition: all 0.15s ease;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255, 200, 200, 0.6);
+            margin: 30px auto 20px;
+            display: block;
+            will-change: transform;
+        }
+
+        button:active {
+            transform: translateY(8px);
+            box-shadow: 0 5px 0 #4d0013, 0 15px 30px #ff4d4d;
+        }
+
+        /* скрытый сюрприз */
+        .srp {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.7rem;
+            color: #ffd7d7;
+            border: 2px dotted #ff8888;
+            margin-top: 30px;
+            display: none;
+            backdrop-filter: blur(4px);
+            transition: 0.5s;
+        }
+
+        .srp.show {
+            display: block;
+            animation: fadePop 0.8s;
+        }
+
+        @keyframes fadePop {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* цветочный параллакс слой (фон) */
+        .parallax-bg {
+            position: fixed;
+            top: -20px;
+            left: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.2"><path fill="%23ff6b6b" d="M50 80 Q70 50 90 80 T130 80 Q150 110 130 140 T90 140 T50 140 Q30 110 50 80"/><circle fill="%23ffb6b6" cx="100" cy="70" r="12"/><path fill="%23ff3b3b" d="M60 150 L80 110 L120 110 L140 150 L100 180 Z"/><circle fill="%23ffe6e6" cx="140" cy="40" r="18"/><circle fill="%23ff8a8a" cx="30" cy="170" r="25"/><path fill="%23ffb6b6" d="M170 130 Q190 150 170 170 Q150 190 130 170 Q110 150 130 130 Q150 110 170 130"/></svg>') repeat;
+            background-size: 150px 150px;
+            z-index: -1;
+            pointer-events: none;
+            will-change: transform;
+            filter: drop-shadow(0 0 15px crimson);
+        }
+
+        /* Второй слой для глубины */
+        .parallax-bg2 {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, rgba(150, 0, 0, 0.3) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(200, 60, 60, 0.2) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Адаптация */
+        @media (max-width: 700px) {
+            h1 { font-size: 2.8rem; }
+            p { font-size: 1.3rem; }
+            .container { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Кастомный курсор -->
+    <div class="cursor" id="customCursor"></div>
+
+    <!-- Параллакс фоны (двигаются за курсором) -->
+    <div class="parallax-bg" id="bgLayer1"></div>
+    <div class="parallax-bg2" id="bgLayer2"></div>
+
+    <div class="container">
+        <h1>🌸 С 8 марта! 🌸</h1>
+
+        <!-- блок 1 с параллакс-эффектом наведения -->
+        <div class="parallax-block" id="block1">
+            <p>✨ Спасибо за поддержку, мама ✨</p>
+        </div>
+
+        <!-- блок 2 -->
+        <div class="parallax-block" id="block2">
+            <h3>❤️ спасибо за все ❤️</h3>
+            <p>Ты самая лучшая, добрая и заботливая.</p>
+        </div>
+
+        <!-- блок 3 -->
+        <div class="parallax-block" id="block3">
+            <p>🌸 ты прекрасна 🌸</p>
+        </div>
+
+        <!-- кнопка и сюрприз -->
+        <button id="surpriseBtn">🎁 открой сюрприз</button>
+        <div class="srp" id="surpriseBlock">
+            💐 Поздравляю! Пусть каждый день будет таким же ярким, как эти цветы! 💐
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 1. Кастомный переливающийся курсор
+            const cursor = document.getElementById('customCursor');
+            if (cursor) {
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                });
+
+                // скрываем курсор при уходе с окна (чтобы не болтался)
+                document.addEventListener('mouseleave', () => {
+                    cursor.style.opacity = '0';
+                });
+                document.addEventListener('mouseenter', () => {
+                    cursor.style.opacity = '1';
+                });
+            }
+
+            // 2. Параллакс для фоновых слоёв (движение за курсором)
+            const bg1 = document.getElementById('bgLayer1');
+            const bg2 = document.getElementById('bgLayer2');
+            
+            if (bg1 && bg2) {
+                document.addEventListener('mousemove', (e) => {
+                    const x = e.clientX / window.innerWidth - 0.5;  // от -0.5 до 0.5
+                    const y = e.clientY / window.innerHeight - 0.5;
+
+                    // мягкое смещение для глубины
+                    const moveX1 = x * 30; // до 15px
+                    const moveY1 = y * 30;
+                    const moveX2 = x * 50; // второй слой движется быстрее (параллакс эффект)
+                    const moveY2 = y * 50;
+
+                    bg1.style.transform = `translate(${moveX1}px, ${moveY1}px)`;
+                    bg2.style.transform = `translate(${moveX2}px, ${moveY2}px)`;
+                });
+            }
+
+            // 3. Параллакс на блоках при наведении (3D tilt)
+            const blocks = document.querySelectorAll('.parallax-block');
+            
+            blocks.forEach(block => {
+                block.addEventListener('mousemove', (e) => {
+                    const rect = block.getBoundingClientRect();
+                    const x = e.clientX - rect.left; // координаты внутри блока
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const deltaX = (x - centerX) / centerX; // от -1 до 1
+                    const deltaY = (y - centerY) / centerY;
+
+                    // угол наклона макс 8 градусов
+                    const rotateY = deltaX * 8;   // положительный X -> поворот вправо
+                    const rotateX = deltaY * -6;   // отрицательный Y (вверх) -> наклон вперёд
+
+                    // смещение тени (чтобы она двигалась за "светом")
+                    const shadowX = deltaX * 15;
+                    const shadowY = deltaY * 15;
+
+                    block.style.transform = `perspective(400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    block.style.boxShadow = `${-shadowX}px ${-shadowY}px 30px rgba(220, 20, 20, 0.6), 0 20px 30px rgba(0,0,0,0.4)`;
+                    block.style.transition = `transform 0.1s, box-shadow 0.1s`;
+                });
+
+                block.addEventListener('mouseleave', () => {
+                    // возвращаем в исходное состояние
+                    block.style.transform = `perspective(400px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    block.style.boxShadow = `0 10px 30px rgba(150, 0, 0, 0.5)`;
+                    block.style.transition = `transform 0.3s ease-out, box-shadow 0.3s ease-out`;
+                });
+            });
+
+            // 4. Кнопка сюрприза
+            const surpriseBtn = document.getElementById('surpriseBtn');
+            const surpriseBlock = document.getElementById('surpriseBlock');
+
+            if (surpriseBtn && surpriseBlock) {
+                surpriseBtn.addEventListener('click', () => {
+                    surpriseBlock.classList.toggle('show');
+                    
+                    // дополнительная анимация при клике
+                    surpriseBtn.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        surpriseBtn.style.transform = 'scale(1)';
+                    }, 150);
+
+                    // если блок показан, можно изменить текст кнопки
+                    if (surpriseBlock.classList.contains('show')) {
+                        surpriseBtn.textContent = '🎉 закрыть';
+                    } else {
+                        surpriseBtn.textContent = '🎁 открой сюрприз';
+                    }
+                });
+            }
+
+            // 5. Небольшая защита от того, что курсор выходит за границы экрана (остаётся фиксированным)
+            window.addEventListener('resize', () => {}); // ничего не делаем, но left/top остаются корректными
+
+        })();
+    </script>
+</body>
+</html>
